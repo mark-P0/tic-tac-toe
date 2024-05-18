@@ -1,7 +1,10 @@
+import { useState } from "react";
 import { useModalContext } from "../../contexts/ModalContext";
 
 function SessionPrompt() {
   const { closeModal } = useModalContext();
+  const [player1, setPlayer1] = useState("");
+  const [player2, setPlayer2] = useState("");
 
   function cancel() {
     closeModal();
@@ -16,14 +19,24 @@ function SessionPrompt() {
       <div className="flex items-center justify-center gap-36">
         <section className="grid place-items-center gap-3">
           <h3 className="text-2xl font-bold">Player 1</h3>
-          <input type="text" className="px-2 py-1 rounded-lg" />
+          <input
+            type="text"
+            value={player1}
+            onChange={(event) => setPlayer1(event.target.value)}
+            className="px-2 py-1 rounded-lg"
+          />
         </section>
 
         <div className="text-xl">vs</div>
 
         <section className="grid place-items-center gap-3">
           <h3 className="text-2xl font-bold">Player 2</h3>
-          <input type="text" className="px-2 py-1 rounded-lg" />
+          <input
+            type="text"
+            value={player2}
+            onChange={(event) => setPlayer2(event.target.value)}
+            className="px-2 py-1 rounded-lg"
+          />
         </section>
       </div>
 
