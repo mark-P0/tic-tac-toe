@@ -22,7 +22,7 @@ function HomeScreen() {
   );
 }
 
-function _App() {
+function useCurrentScreen() {
   const { screen } = useScreenContext();
 
   if (screen === "game") {
@@ -33,6 +33,12 @@ function _App() {
   }
 
   screen satisfies never;
+  return screen;
+}
+function _App() {
+  const screen = useCurrentScreen();
+
+  return <>{screen}</>;
 }
 export function App() {
   return (
