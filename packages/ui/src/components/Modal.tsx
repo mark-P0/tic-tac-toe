@@ -7,6 +7,7 @@ export function Modal() {
   const attributes = useModalContext();
   const { status, closeModal, forceOpenModal, forceCloseModal } = attributes;
   const { content } = attributes;
+  const { isCancellable } = attributes;
 
   const dialogRef = useRef<HTMLDialogElement | null>(null);
   useEffect(() => {
@@ -27,6 +28,8 @@ export function Modal() {
   function handleCancel(event: SyntheticEvent) {
     /** Prevent immediate dialog dismiss e.g. via `Esc` */
     event.preventDefault();
+
+    if (!isCancellable) return;
 
     closeModal();
   }

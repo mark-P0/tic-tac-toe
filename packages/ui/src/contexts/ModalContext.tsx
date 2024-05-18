@@ -23,8 +23,14 @@ export const [useModalContext, ModalProvider] = createNewContext(() => {
     setContent(to);
   }, []);
 
+  const [isCancellable, setIsCancellable] = useState(true);
+  const makeModalCancellable = useCallback((condition: boolean) => {
+    setIsCancellable(condition);
+  }, []);
+
   return {
     ...{ status, openModal, closeModal, forceOpenModal, forceCloseModal },
     ...{ content, changeModalContent },
+    ...{ isCancellable, makeModalCancellable },
   };
 });

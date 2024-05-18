@@ -15,14 +15,23 @@ function GameScreen() {
 
 function HomeScreen() {
   const { changeScreen } = useScreenContext();
-  const { openModal, changeModalContent, closeModal } = useModalContext();
+  const { openModal, changeModalContent, closeModal, makeModalCancellable } =
+    useModalContext();
 
   function showSampleModal() {
     openModal();
+    makeModalCancellable(false);
     changeModalContent(
       <div className="bg-red-500 h-screen w-screen">
         <div>Hello, world!</div>
-        <button onClick={closeModal}>Close modal</button>
+        <button
+          onClick={() => {
+            closeModal();
+            makeModalCancellable(true);
+          }}
+        >
+          Close modal
+        </button>
       </div>
     );
   }
