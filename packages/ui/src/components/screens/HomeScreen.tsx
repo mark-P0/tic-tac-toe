@@ -60,7 +60,7 @@ function SessionPrompt() {
           onClick={start}
           className="bg-white p-3 rounded-lg text-xl font-bold transition disabled:opacity-50"
         >
-          Start!
+          Start
         </button>
         <button
           type="button"
