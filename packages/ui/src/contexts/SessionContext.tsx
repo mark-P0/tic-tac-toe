@@ -3,7 +3,10 @@ import { createNewContext } from "../utils/react";
 
 type Round = {
   board: string;
-  isFinished: boolean;
+  winner:
+    | string // A player
+    | null // Tie (no one won)
+    | undefined; // No winner yet; round is possibly on-going or left unfinished
 };
 type Session = {
   players: [string, string] | null;
