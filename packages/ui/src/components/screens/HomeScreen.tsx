@@ -1,6 +1,12 @@
 import { useModalContext } from "../../contexts/ModalContext";
 
 function SessionPrompt() {
+  const { closeModal } = useModalContext();
+
+  function cancel() {
+    closeModal();
+  }
+
   return (
     <form className="h-screen w-screen bg-stone-400 flex flex-col justify-center gap-24">
       <header className="grid place-items-center">
@@ -30,6 +36,7 @@ function SessionPrompt() {
         </button>
         <button
           type="button"
+          onClick={cancel}
           className="p-3 rounded-lg hover:underline underline-offset-2"
         >
           Cancel
