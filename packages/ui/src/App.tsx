@@ -1,14 +1,43 @@
-import { useState } from "react";
+import { ScreenProvider, useScreenContext } from "./contexts/ScreenContext";
 
-export function App() {
-  const [count, setCount] = useState(0);
+function GameScreen() {
+  const { changeScreen } = useScreenContext();
 
   return (
-    <button
-      onClick={() => setCount((count) => count + 1)}
-      className="bg-neutral-500 p-3 rounded-lg"
-    >
-      count is {count}
-    </button>
+    <article>
+      <pre>GameScreen</pre>
+      <button onClick={() => changeScreen("home")}>Go to home screen</button>
+    </article>
+  );
+}
+
+function HomeScreen() {
+  const { changeScreen } = useScreenContext();
+
+  return (
+    <article>
+      <pre>HomeScreen</pre>
+      <button onClick={() => changeScreen("game")}>Go to game screen</button>
+    </article>
+  );
+}
+
+function _App() {
+  const { screen } = useScreenContext();
+
+  if (screen === "game") {
+    return <GameScreen />;
+  }
+  if (screen === "home") {
+    return <HomeScreen />;
+  }
+
+  screen satisfies never;
+}
+export function App() {
+  return (
+    <ScreenProvider>
+      <_App />
+    </ScreenProvider>
   );
 }
