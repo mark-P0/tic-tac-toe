@@ -10,6 +10,8 @@ function SessionPrompt() {
     closeModal();
   }
 
+  const canStart = player1 !== "" && player2 !== "";
+
   return (
     <form className="h-screen w-screen bg-stone-400 flex flex-col justify-center gap-24">
       <header className="grid place-items-center">
@@ -43,7 +45,8 @@ function SessionPrompt() {
       <footer className="flex flex-col justify-center items-center gap-3">
         <button
           type="button"
-          className="bg-white p-3 rounded-lg text-xl font-bold"
+          disabled={!canStart}
+          className="bg-white p-3 rounded-lg text-xl font-bold transition disabled:opacity-50"
         >
           Start!
         </button>
