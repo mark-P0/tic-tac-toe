@@ -15,10 +15,16 @@ function GameScreen() {
 
 function HomeScreen() {
   const { changeScreen } = useScreenContext();
-  const { openModal } = useModalContext();
+  const { openModal, changeModalContent, closeModal } = useModalContext();
 
   function showSampleModal() {
     openModal();
+    changeModalContent(
+      <div className="bg-red-500 h-screen w-screen">
+        <div>Hello, world!</div>
+        <button onClick={closeModal}>Close modal</button>
+      </div>
+    );
   }
 
   return (

@@ -6,6 +6,7 @@ import { useModalContext } from "../contexts/ModalContext";
 export function Modal() {
   const attributes = useModalContext();
   const { status, closeModal, forceOpenModal, forceCloseModal } = attributes;
+  const { content } = attributes;
 
   const dialogRef = useRef<HTMLDialogElement | null>(null);
   useEffect(() => {
@@ -48,10 +49,7 @@ export function Modal() {
         isTransitioning && "backdrop:-translate-y-full backdrop:opacity-0"
       )}
     >
-      <div className="bg-red-500 h-screen w-screen">
-        <div>Hello, world!</div>
-        <button onClick={closeModal}>Close modal</button>
-      </div>
+      {content}
     </dialog>
   );
 }

@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { ReactNode, useCallback, useState } from "react";
 import { createNewContext } from "../utils/react";
 
 export const [useModalContext, ModalProvider] = createNewContext(() => {
@@ -18,7 +18,13 @@ export const [useModalContext, ModalProvider] = createNewContext(() => {
     setStatus("closed");
   }, []);
 
+  const [content, setContent] = useState<ReactNode>(null);
+  const changeModalContent = useCallback((to: ReactNode) => {
+    setContent(to);
+  }, []);
+
   return {
     ...{ status, openModal, closeModal, forceOpenModal, forceCloseModal },
+    ...{ content, changeModalContent },
   };
 });
