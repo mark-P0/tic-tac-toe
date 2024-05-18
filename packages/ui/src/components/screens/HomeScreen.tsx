@@ -1,11 +1,17 @@
 import { useState } from "react";
 import { useModalContext } from "../../contexts/ModalContext";
+import { useScreenContext } from "../../contexts/ScreenContext";
 
 function SessionPrompt() {
+  const { changeScreen } = useScreenContext();
   const { closeModal } = useModalContext();
   const [player1, setPlayer1] = useState("");
   const [player2, setPlayer2] = useState("");
 
+  function start() {
+    changeScreen("game");
+    closeModal();
+  }
   function cancel() {
     closeModal();
   }
@@ -46,6 +52,7 @@ function SessionPrompt() {
         <button
           type="button"
           disabled={!canStart}
+          onClick={start}
           className="bg-white p-3 rounded-lg text-xl font-bold transition disabled:opacity-50"
         >
           Start!
