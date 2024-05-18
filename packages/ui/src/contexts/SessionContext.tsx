@@ -13,6 +13,10 @@ type Session = {
   rounds: Round[];
 };
 
+const BASE_ROUND = (): Round => ({
+  board: "_________",
+  winner: undefined,
+});
 const BASE_SESSION = (): Session => ({
   players: null,
   rounds: [],
@@ -32,8 +36,15 @@ export const [useSessionContext, SessionProvider] = createNewContext(() => {
     },
     []
   );
+  const addNewRound = useCallback(() => {
+    setSession((session) => ({
+      ...session,
+      rounds: [...session.rounds, BASE_ROUND()],
+    }));
+  }, []);
 
   return {
     ...{ session, resetSession, setSessionPlayers },
+    addNewRound,
   };
 });

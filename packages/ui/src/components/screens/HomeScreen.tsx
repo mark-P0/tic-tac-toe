@@ -4,7 +4,7 @@ import { useScreenContext } from "../../contexts/ScreenContext";
 import { useSessionContext } from "../../contexts/SessionContext";
 
 function SessionPrompt() {
-  const { setSessionPlayers } = useSessionContext();
+  const { setSessionPlayers, addNewRound } = useSessionContext();
   const { changeScreen } = useScreenContext();
   const { closeModal } = useModalContext();
   const [player1, setPlayer1] = useState("");
@@ -12,6 +12,7 @@ function SessionPrompt() {
 
   function start() {
     setSessionPlayers([player1, player2]);
+    addNewRound();
 
     changeScreen("game");
     closeModal();
