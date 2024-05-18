@@ -20,8 +20,17 @@ export const [useSessionContext, SessionProvider] = createNewContext(() => {
   const resetSession = useCallback(() => {
     setSession(BASE_SESSION());
   }, []);
+  const setSessionPlayers = useCallback(
+    (players: NonNullable<Session["players"]>) => {
+      setSession((session) => ({
+        ...session,
+        players,
+      }));
+    },
+    []
+  );
 
   return {
-    ...{ session, resetSession },
+    ...{ session, resetSession, setSessionPlayers },
   };
 });
