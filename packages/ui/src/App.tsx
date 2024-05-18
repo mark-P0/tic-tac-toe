@@ -2,14 +2,17 @@ import { Modal } from "./components/Modal";
 import { HomeScreen } from "./components/screens/HomeScreen";
 import { ModalProvider } from "./contexts/ModalContext";
 import { ScreenProvider, useScreenContext } from "./contexts/ScreenContext";
+import { SessionProvider, useSessionContext } from "./contexts/SessionContext";
 
 function GameScreen() {
   const { changeScreen } = useScreenContext();
+  const { session } = useSessionContext();
 
   return (
     <article>
-      <pre>GameScreen</pre>
       <button onClick={() => changeScreen("home")}>Go to home screen</button>
+
+      <pre>{JSON.stringify(session, undefined, 2)}</pre>
     </article>
   );
 }
@@ -39,10 +42,12 @@ function _App() {
 }
 export function App() {
   return (
-    <ScreenProvider>
-      <ModalProvider>
-        <_App />
-      </ModalProvider>
-    </ScreenProvider>
+    <SessionProvider>
+      <ScreenProvider>
+        <ModalProvider>
+          <_App />
+        </ModalProvider>
+      </ScreenProvider>
+    </SessionProvider>
   );
 }
