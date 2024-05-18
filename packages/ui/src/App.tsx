@@ -1,3 +1,5 @@
+import { Modal } from "./components/Modal";
+import { ModalProvider, useModalContext } from "./contexts/ModalContext";
 import { ScreenProvider, useScreenContext } from "./contexts/ScreenContext";
 
 function GameScreen() {
@@ -13,11 +15,20 @@ function GameScreen() {
 
 function HomeScreen() {
   const { changeScreen } = useScreenContext();
+  const { openModal } = useModalContext();
+
+  function showSampleModal() {
+    openModal();
+  }
 
   return (
     <article>
       <pre>HomeScreen</pre>
-      <button onClick={() => changeScreen("game")}>Go to game screen</button>
+
+      <div className="grid gap-2">
+        <button onClick={() => changeScreen("game")}>Go to game screen</button>
+        <button onClick={showSampleModal}>Open modal</button>
+      </div>
     </article>
   );
 }
@@ -38,12 +49,19 @@ function useCurrentScreen() {
 function _App() {
   const screen = useCurrentScreen();
 
-  return <>{screen}</>;
+  return (
+    <>
+      {screen}
+      <Modal />
+    </>
+  );
 }
 export function App() {
   return (
     <ScreenProvider>
-      <_App />
+      <ModalProvider>
+        <_App />
+      </ModalProvider>
     </ScreenProvider>
   );
 }
