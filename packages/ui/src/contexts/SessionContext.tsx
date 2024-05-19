@@ -1,9 +1,9 @@
 import { useCallback, useState } from "react";
 import { createNewContext } from "../utils/react";
 
-type Player = "x" | "o";
-type Cell = Player | null;
-type Round = {
+export type Player = "x" | "o";
+export type Cell = Player | null;
+export type Round = {
   board: Cell[];
   winner:
     | Player // "Symbol" of a player
@@ -44,9 +44,15 @@ export const [useSessionContext, SessionProvider] = createNewContext(() => {
       rounds: [...session.rounds, BASE_ROUND()],
     }));
   }, []);
+  const setCurrentRound = useCallback((round: Round) => {
+    setSession((session) => ({
+      ...session,
+      rounds: [...session.rounds.slice(0, -1), round],
+    }));
+  }, []);
 
   return {
     ...{ session, resetSession, setSessionPlayers },
-    addNewRound,
+    ...{ addNewRound, setCurrentRound },
   };
 });
