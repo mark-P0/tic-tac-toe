@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import { createNewContext } from "../utils/react";
 
-type Player = "x" | "o";
+export type Player = "x" | "o";
 type Cell = Player | null;
 type Round = {
   board: Cell[];

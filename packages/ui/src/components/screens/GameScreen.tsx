@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { raise } from "utils/errors";
-import { useSessionContext } from "../../contexts/SessionContext";
+import { Player, useSessionContext } from "../../contexts/SessionContext";
 
 function useSessionInfo() {
   const { session } = useSessionContext();
@@ -34,14 +35,27 @@ export function GameScreen() {
   const { players, rounds, player1Wins, player2Wins, draws, round } =
     useSessionInfo();
 
-  function makeMove(idx: number) {
-    round.board[idx] = "x"; // Should use current player
-    setCurrentRound({ ...round });
+  const [currentPlayer, setCurrentPlayer] = useState<Player>("x");
+  function changeToNextPlayer() {
+    if (currentPlayer === "x") {
+      setCurrentPlayer("o");
+      return;
+    }
 
-    // TODO Should cycle to next player
+    if (currentPlayer === "o") {
+      setCurrentPlayer("x");
+      return;
+    }
+
+    currentPlayer satisfies never;
   }
 
-  // TODO Add state for current player turn
+  function makeMove(idx: number) {
+    round.board[idx] = currentPlayer;
+    setCurrentRound({ ...round });
+
+    changeToNextPlayer();
+  }
 
   // TODO Check if round board already has a winner
   // TODO if with winner, disable form fieldset below
