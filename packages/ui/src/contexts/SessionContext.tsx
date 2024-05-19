@@ -7,7 +7,7 @@ export type Cell = Player | null;
 export type Round = {
   board: Cell[];
 };
-type Session = {
+export type Session = {
   timestampMs: number;
   players: [string, string] | null;
   rounds: Round[];
@@ -126,13 +126,6 @@ export const [useSessionContext, SessionProvider] = createNewContext(() => {
     },
     []
   );
-  const saveSessionToLocalStorage = useCallback(() => {
-    // TODO Parse with Zod?
-    const sessionsFromStorage = localStorage.getItem("sessions") ?? "[]";
-    const sessions: Session[] = JSON.parse(sessionsFromStorage);
-
-    localStorage.setItem("sessions", JSON.stringify([...sessions, session]));
-  }, [session]);
 
   const addNewRound = useCallback(() => {
     setSession((session) => ({
@@ -148,7 +141,7 @@ export const [useSessionContext, SessionProvider] = createNewContext(() => {
   }, []);
 
   return {
-    ...{ session, resetSession, setSessionPlayers, saveSessionToLocalStorage },
+    ...{ session, resetSession, setSessionPlayers },
     ...{ addNewRound, setCurrentRound },
   };
 });
