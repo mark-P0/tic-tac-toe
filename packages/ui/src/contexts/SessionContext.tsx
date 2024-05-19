@@ -1,11 +1,13 @@
 import { useCallback, useState } from "react";
 import { createNewContext } from "../utils/react";
 
+type Player = "x" | "o";
+type Cell = Player | null;
 type Round = {
-  board: string;
+  board: Cell[];
   winner:
-    | string // A player
-    | null // Tie (no one won)
+    | Player // "Symbol" of a player
+    | null // Draw (no one won)
     | undefined; // No winner yet; round is possibly on-going or left unfinished
 };
 type Session = {
@@ -14,7 +16,7 @@ type Session = {
 };
 
 const BASE_ROUND = (): Round => ({
-  board: "_________",
+  board: Array<Cell>(3 * 3).fill(null),
   winner: undefined,
 });
 const BASE_SESSION = (): Session => ({
