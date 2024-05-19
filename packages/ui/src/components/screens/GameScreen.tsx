@@ -11,11 +11,25 @@ import {
 } from "../../contexts/SessionContext";
 
 function RoundEndPrompt() {
+  const { addNewRound } = useSessionContext();
+  const { closeModal } = useModalContext();
+
   const sessionInfo = useSessionInfo();
-  const { players } = sessionInfo;
+  const { players, rounds } = sessionInfo;
   const { player1Wins, player2Wins, draws } = sessionInfo;
 
-  const { round } = sessionInfo;
+  const [hasContinued, setHasContinued] = useState(false);
+  function continueToNextRound() {
+    setHasContinued(true);
+    addNewRound();
+    closeModal();
+  }
+
+  const lastRound = rounds[rounds.length - 2];
+  const currentRound = rounds[rounds.length - 1];
+  const round =
+    (hasContinued ? lastRound : currentRound) ??
+    raise("Round results does not exist...?");
   const { winner } = getRoundInfo(round);
 
   const winnerName =
@@ -80,6 +94,7 @@ function RoundEndPrompt() {
       <footer className="flex flex-col justify-center items-center gap-3">
         <button
           type="button"
+          onClick={continueToNextRound}
           className="bg-white p-3 rounded-lg text-xl font-bold transition disabled:opacity-50"
         >
           Continue
