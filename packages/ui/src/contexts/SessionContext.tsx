@@ -3,7 +3,7 @@ import { createNewContext } from "../utils/react";
 
 export type Player = "x" | "o";
 type Cell = Player | null;
-type Round = {
+export type Round = {
   board: Cell[];
   winner:
     | Player // "Symbol" of a player

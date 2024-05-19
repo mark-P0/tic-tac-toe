@@ -1,6 +1,46 @@
 import { useState } from "react";
 import { raise } from "utils/errors";
-import { Player, useSessionContext } from "../../contexts/SessionContext";
+import {
+  Player,
+  Round,
+  useSessionContext,
+} from "../../contexts/SessionContext";
+
+function getWinningIndices(board: Round["board"]) {
+  const slices = [
+    // Horizontals
+    ...[
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+    ],
+    // Verticals
+    ...[
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 8, 5],
+    ],
+    // Diagonals
+    ...[
+      [0, 4, 8],
+      [2, 4, 6],
+    ],
+  ] as const;
+
+  for (const slice of slices) {
+    const [a, b, c] = slice;
+
+    if (
+      board[a] !== null &&
+      board[a] === board[b] &&
+      board[a] === board[c] &&
+      board[b] === board[c]
+    )
+      return slice;
+  }
+
+  return null;
+}
 
 function useSessionInfo() {
   const { session } = useSessionContext();
@@ -22,18 +62,22 @@ function useSessionInfo() {
 
   const round =
     rounds[rounds.length - 1] ?? raise("Current round does not exist...?");
+  const winningIndices = getWinningIndices(round.board);
 
   return {
     ...{ players, rounds },
     ...{ player1Wins, player2Wins, draws },
-    round,
+    ...{ round, winningIndices },
   };
 }
 
 export function GameScreen() {
   const { setCurrentRound } = useSessionContext();
-  const { players, rounds, player1Wins, player2Wins, draws, round } =
-    useSessionInfo();
+
+  const sessionInfo = useSessionInfo();
+  const { players, rounds } = sessionInfo;
+  const { player1Wins, player2Wins, draws } = sessionInfo;
+  const { round, winningIndices } = sessionInfo;
 
   const [currentPlayer, setCurrentPlayer] = useState<Player>("x");
   function changeToNextPlayer() {
@@ -57,8 +101,6 @@ export function GameScreen() {
     changeToNextPlayer();
   }
 
-  // TODO Check if round board already has a winner
-  // TODO if with winner, disable form fieldset below
   // TODO if with winner, useEffect update round, show game end modal
 
   return (
@@ -88,7 +130,10 @@ export function GameScreen() {
       </header>
 
       <form className="grid place-items-center">
-        <fieldset className="grid grid-cols-3 grid-rows-3 gap-6 p-6 rounded-lg aspect-square h-2/3 bg-stone-400">
+        <fieldset
+          disabled={winningIndices !== null}
+          className="grid grid-cols-3 grid-rows-3 gap-6 p-6 rounded-lg aspect-square h-2/3 bg-stone-400 disabled:opacity-50"
+        >
           {round.board.map((cell, idx) => (
             <button
               type="button"
