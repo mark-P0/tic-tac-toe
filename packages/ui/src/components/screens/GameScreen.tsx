@@ -51,8 +51,21 @@ function getRoundInfo(round: Round) {
   const hasFreeBoardCells = round.board.includes(null);
   const isRoundOver = hasWinner || !hasFreeBoardCells;
 
+  type Winner =
+    | Player // "Symbol" of a player
+    | null // Draw (no one won)
+    | undefined; // No winner yet; round is possibly on-going or left unfinished
+  let winner: Winner = null;
+  if (!isRoundOver) {
+    winner = undefined;
+  }
+  if (hasWinner) {
+    const idx = winningIndices[0];
+    winner = round.board[idx];
+  }
+
   return {
-    winningIndices,
+    ...{ winningIndices, winner },
     ...{ hasWinner, hasFreeBoardCells, isRoundOver },
   };
 }
@@ -68,21 +81,16 @@ function useSessionInfo() {
 
   const round =
     rounds[rounds.length - 1] ?? raise("Current round does not exist...?");
-  const { winningIndices, hasWinner, isRoundOver } = getRoundInfo(round);
-
-  if (hasWinner) {
-    const sampleWinningIdx =
-      winningIndices?.[0] ?? raise("First winning index does not exist...?");
-    round.winner = round.board[sampleWinningIdx];
-  }
+  const { winningIndices, isRoundOver } = getRoundInfo(round);
 
   let player1Wins = 0;
   let player2Wins = 0;
   let draws = 0;
   for (const round of rounds) {
-    if (round.winner === "x") player1Wins++;
-    if (round.winner === "o") player2Wins++;
-    if (round.winner === null) draws++;
+    const { winner } = getRoundInfo(round);
+    if (winner === "x") player1Wins++;
+    if (winner === "o") player2Wins++;
+    if (winner === null) draws++;
   }
 
   return {
