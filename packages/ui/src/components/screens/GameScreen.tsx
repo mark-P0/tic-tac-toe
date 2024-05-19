@@ -79,10 +79,6 @@ function useSessionInfo() {
   }
   players satisfies NonNullable<typeof players>;
 
-  const round =
-    rounds[rounds.length - 1] ?? raise("Current round does not exist...?");
-  const { winningIndices, isRoundOver } = getRoundInfo(round);
-
   let player1Wins = 0;
   let player2Wins = 0;
   let draws = 0;
@@ -93,10 +89,13 @@ function useSessionInfo() {
     if (winner === null) draws++;
   }
 
+  const round =
+    rounds[rounds.length - 1] ?? raise("Current round does not exist...?");
+
   return {
     ...{ players, rounds },
-    ...{ round, winningIndices, isRoundOver },
     ...{ player1Wins, player2Wins, draws },
+    ...{ round },
   };
 }
 
@@ -126,8 +125,10 @@ export function GameScreen() {
 
   const sessionInfo = useSessionInfo();
   const { players, rounds } = sessionInfo;
-  const { round, winningIndices, isRoundOver } = sessionInfo;
   const { player1Wins, player2Wins, draws } = sessionInfo;
+
+  const { round } = sessionInfo;
+  const { winningIndices, isRoundOver } = getRoundInfo(round);
 
   const [currentPlayer, setCurrentPlayer] = useState<Player>("x");
   function changeToNextPlayer() {
