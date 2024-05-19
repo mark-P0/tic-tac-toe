@@ -2,6 +2,7 @@ import clsx from "clsx";
 import { ComponentProps, useEffect, useState } from "react";
 import { raise } from "utils/errors";
 import { useModalContext } from "../../contexts/ModalContext";
+import { useScreenContext } from "../../contexts/ScreenContext";
 import {
   Cell,
   Player,
@@ -11,7 +12,8 @@ import {
 } from "../../contexts/SessionContext";
 
 function RoundEndPrompt() {
-  const { addNewRound } = useSessionContext();
+  const { addNewRound, resetSession } = useSessionContext();
+  const { changeScreen } = useScreenContext();
   const { closeModal } = useModalContext();
 
   const sessionInfo = useSessionInfo();
@@ -23,6 +25,18 @@ function RoundEndPrompt() {
     setHasContinued(true);
     addNewRound();
     closeModal();
+  }
+
+  function stop() {
+    // TODO Save session to database
+
+    closeModal();
+    changeScreen("home");
+
+    // TODO Better way to do this...?
+    setTimeout(() => {
+      resetSession();
+    }, 1 * 1000);
   }
 
   const lastRound = rounds[rounds.length - 2];
@@ -101,6 +115,7 @@ function RoundEndPrompt() {
         </button>
         <button
           type="button"
+          onClick={stop}
           className="p-3 rounded-lg hover:underline underline-offset-2"
         >
           Stop
