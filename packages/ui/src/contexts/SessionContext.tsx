@@ -5,7 +5,7 @@ type Round = {
   board: string;
   winner:
     | string // A player
-    | null // Tie (no one won)
+    | null // Draw (no one won)
     | undefined; // No winner yet; round is possibly on-going or left unfinished
 };
 type Session = {
