@@ -1,5 +1,6 @@
 import clsx from "clsx";
-import { ComponentProps, useState } from "react";
+import { ComponentProps, useEffect, useState } from "react";
+import { useModalContext } from "../../contexts/ModalContext";
 import {
   Cell,
   Player,
@@ -7,6 +8,10 @@ import {
   useSessionContext,
   useSessionInfo,
 } from "../../contexts/SessionContext";
+
+function RoundEndPrompt() {
+  return <form>round end prompt</form>;
+}
 
 function BoardCellButton(props: {
   cell: Cell;
@@ -31,6 +36,8 @@ function BoardCellButton(props: {
 
 export function GameScreen() {
   const { setCurrentRound } = useSessionContext();
+  const { openModal, changeModalContent, makeModalCancellable } =
+    useModalContext();
 
   const sessionInfo = useSessionInfo();
   const { players, rounds } = sessionInfo;
@@ -38,6 +45,13 @@ export function GameScreen() {
 
   const { round } = sessionInfo;
   const { winningIndices, isRoundOver } = getRoundInfo(round);
+  useEffect(() => {
+    if (!isRoundOver) return;
+
+    makeModalCancellable(false);
+    changeModalContent(<RoundEndPrompt />);
+    openModal();
+  }, [isRoundOver, openModal, changeModalContent, makeModalCancellable]);
 
   const [currentPlayer, setCurrentPlayer] = useState<Player>("x");
   function changeToNextPlayer() {
