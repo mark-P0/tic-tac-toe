@@ -128,7 +128,7 @@ function SessionDisplay(props: { session: Session }) {
   return (
     <article className="bg-stone-400 h-[33vh] p-6 overflow-x-scroll">
       <ol className="h-full w-fit flex gap-12">
-        <li>
+        <li className="h-full">
           <section className="aspect-square h-full flex flex-col justify-center items-center gap-3">
             <p className="text-sm text-black/50">{timestampStr}</p>
             <div className="grid grid-cols-3 items-center gap-3">
@@ -149,7 +149,7 @@ function SessionDisplay(props: { session: Session }) {
         </li>
 
         {rounds.map((round, idx) => (
-          <li key={idx}>
+          <li key={idx} className="h-full">
             <RoundDisplay round={round} />
           </li>
         ))}
