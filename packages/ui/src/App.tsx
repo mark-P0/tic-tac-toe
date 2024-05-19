@@ -3,13 +3,14 @@ import { GameScreen } from "./components/screens/GameScreen";
 import { HomeScreen } from "./components/screens/HomeScreen";
 import { ModalProvider } from "./contexts/ModalContext";
 import { ScreenProvider, useScreenContext } from "./contexts/ScreenContext";
-import { SessionProvider } from "./contexts/SessionContext";
+import { SessionProvider, useSessionContext } from "./contexts/SessionContext";
 
 function useCurrentScreen() {
+  const { session } = useSessionContext();
   const { screen } = useScreenContext();
 
   if (screen === "game") {
-    return <GameScreen />;
+    return <GameScreen key={session.rounds.length} />;
   }
   if (screen === "home") {
     return <HomeScreen />;
@@ -29,6 +30,8 @@ function _App() {
   );
 }
 export function App() {
+  // TODO Sync local storage with remote database
+
   return (
     <SessionProvider>
       <ScreenProvider>

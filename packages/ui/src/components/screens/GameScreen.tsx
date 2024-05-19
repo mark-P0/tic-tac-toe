@@ -1,102 +1,129 @@
 import clsx from "clsx";
-import { ComponentProps, useState } from "react";
+import { ComponentProps, useEffect, useState } from "react";
 import { raise } from "utils/errors";
+import { useModalContext } from "../../contexts/ModalContext";
+import { useScreenContext } from "../../contexts/ScreenContext";
 import {
   Cell,
   Player,
-  Round,
+  getRoundInfo,
   useSessionContext,
+  useSessionInfo,
 } from "../../contexts/SessionContext";
 
-function getWinningIndices(board: Round["board"]) {
-  const slices = [
-    // Horizontals
-    ...[
-      [0, 1, 2],
-      [3, 4, 5],
-      [6, 7, 8],
-    ],
-    // Verticals
-    ...[
-      [0, 3, 6],
-      [1, 4, 7],
-      [2, 8, 5],
-    ],
-    // Diagonals
-    ...[
-      [0, 4, 8],
-      [2, 4, 6],
-    ],
-  ];
+function RoundEndPrompt() {
+  const { addNewRound, resetSession, saveSessionToLocalStorage } =
+    useSessionContext();
+  const { changeScreen } = useScreenContext();
+  const { closeModal } = useModalContext();
 
-  for (const slice of slices) {
-    const [a, b, c] = slice;
+  const sessionInfo = useSessionInfo();
+  const { players, rounds } = sessionInfo;
+  const { player1Wins, player2Wins, draws } = sessionInfo;
 
-    if (
-      board[a] !== null &&
-      board[a] === board[b] &&
-      board[a] === board[c] &&
-      board[b] === board[c]
-    )
-      return slice;
+  const [hasContinued, setHasContinued] = useState(false);
+  function continueToNextRound() {
+    setHasContinued(true);
+    addNewRound();
+    closeModal();
   }
 
-  return null;
-}
+  function stop() {
+    saveSessionToLocalStorage();
 
-function getRoundInfo(round: Round) {
-  const winningIndices = getWinningIndices(round.board);
+    closeModal();
+    changeScreen("home");
 
-  const hasWinner = winningIndices !== null;
-  const hasFreeBoardCells = round.board.includes(null);
-  const isRoundOver = hasWinner || !hasFreeBoardCells;
-
-  type Winner =
-    | Player // "Symbol" of a player
-    | null // Draw (no one won)
-    | undefined; // No winner yet; round is possibly on-going or left unfinished
-  let winner: Winner = null;
-  if (!isRoundOver) {
-    winner = undefined;
-  }
-  if (hasWinner) {
-    const idx = winningIndices[0];
-    winner = round.board[idx];
+    // TODO Better way to do this...?
+    setTimeout(() => {
+      resetSession();
+    }, 1 * 1000);
   }
 
-  return {
-    ...{ winningIndices, winner },
-    ...{ hasWinner, hasFreeBoardCells, isRoundOver },
-  };
-}
-
-function useSessionInfo() {
-  const { session } = useSessionContext();
-  const { players, rounds } = session;
-
-  if (players === null) {
-    raise("Players does not exist...?");
-  }
-  players satisfies NonNullable<typeof players>;
-
-  let player1Wins = 0;
-  let player2Wins = 0;
-  let draws = 0;
-  for (const round of rounds) {
-    const { winner } = getRoundInfo(round);
-    if (winner === "x") player1Wins++;
-    if (winner === "o") player2Wins++;
-    if (winner === null) draws++;
-  }
-
+  const lastRound = rounds[rounds.length - 2];
+  const currentRound = rounds[rounds.length - 1];
   const round =
-    rounds[rounds.length - 1] ?? raise("Current round does not exist...?");
+    (hasContinued ? lastRound : currentRound) ??
+    raise("Round results does not exist...?");
+  const { winner } = getRoundInfo(round);
 
-  return {
-    ...{ players, rounds },
-    ...{ player1Wins, player2Wins, draws },
-    ...{ round },
-  };
+  const winnerName =
+    winner === "x"
+      ? players[0]
+      : winner === "o"
+      ? players[1]
+      : raise("Unknown winner name...?");
+
+  return (
+    <form className="h-screen w-screen bg-stone-400 flex flex-col justify-center items-center gap-12">
+      <h2 className="text-3xl">
+        <span className="font-bold">{winnerName}</span> won!
+      </h2>
+
+      <header className="flex gap-24">
+        <div>
+          <h3
+            className={clsx(
+              "text-xl font-bold",
+              winner === "x" && "text-green-700"
+            )}
+          >
+            {players[0]}
+          </h3>
+          <ol className="flex gap-3">
+            <li
+              className={clsx("font-bold", winner === "x" && "text-green-700")}
+            >
+              W {player1Wins}
+            </li>
+            <li className={clsx(winner === "o" && "text-red-700")}>
+              L {player2Wins}
+            </li>
+            <li className="text-black/50">D {draws}</li>
+          </ol>
+        </div>
+
+        <div className="text-right">
+          <h3
+            className={clsx(
+              "text-xl font-bold",
+              winner === "o" && "text-green-700"
+            )}
+          >
+            {players[1]}
+          </h3>
+          <ol className="flex flex-row-reverse gap-3">
+            <li
+              className={clsx("font-bold", winner === "o" && "text-green-700")}
+            >
+              W {player2Wins}
+            </li>
+            <li className={clsx(winner === "x" && "text-red-700")}>
+              L {player1Wins}
+            </li>
+            <li className="text-black/50">D {draws}</li>
+          </ol>
+        </div>
+      </header>
+
+      <footer className="flex flex-col justify-center items-center gap-3">
+        <button
+          type="button"
+          onClick={continueToNextRound}
+          className="bg-white p-3 rounded-lg text-xl font-bold transition disabled:opacity-50"
+        >
+          Continue
+        </button>
+        <button
+          type="button"
+          onClick={stop}
+          className="p-3 rounded-lg hover:underline underline-offset-2"
+        >
+          Stop
+        </button>
+      </footer>
+    </form>
+  );
 }
 
 function BoardCellButton(props: {
@@ -112,7 +139,7 @@ function BoardCellButton(props: {
       type="button"
       disabled={cell !== null}
       onClick={onClick}
-      className={clsx("rounded-lg", isWinning ? "bg-green-400" : "bg-white")}
+      className={clsx("rounded-lg", isWinning ? "bg-green-700" : "bg-white")}
     >
       {cell === "x" && <span className="text-6xl font-bold">X</span>}
       {cell === "o" && <span className="text-6xl font-bold">O</span>}
@@ -122,6 +149,8 @@ function BoardCellButton(props: {
 
 export function GameScreen() {
   const { setCurrentRound } = useSessionContext();
+  const { openModal, changeModalContent, makeModalCancellable } =
+    useModalContext();
 
   const sessionInfo = useSessionInfo();
   const { players, rounds } = sessionInfo;
@@ -129,6 +158,13 @@ export function GameScreen() {
 
   const { round } = sessionInfo;
   const { winningIndices, isRoundOver } = getRoundInfo(round);
+  useEffect(() => {
+    if (!isRoundOver) return;
+
+    makeModalCancellable(false);
+    changeModalContent(<RoundEndPrompt />);
+    openModal();
+  }, [isRoundOver, openModal, changeModalContent, makeModalCancellable]);
 
   const [currentPlayer, setCurrentPlayer] = useState<Player>("x");
   function changeToNextPlayer() {
