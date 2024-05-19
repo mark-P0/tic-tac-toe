@@ -1,7 +1,13 @@
+import { format } from "date-fns";
 import { useState } from "react";
 import { useModalContext } from "../../contexts/ModalContext";
 import { useScreenContext } from "../../contexts/ScreenContext";
-import { useSessionContext } from "../../contexts/SessionContext";
+import {
+  Session,
+  getSessionInfo,
+  useSessionContext,
+} from "../../contexts/SessionContext";
+import { getSessionsFromStorage } from "../../utils/storage";
 
 function SessionPrompt() {
   const { setSessionPlayers, addNewRound } = useSessionContext();
@@ -74,8 +80,50 @@ function SessionPrompt() {
   );
 }
 
+function formatSessionTimestamp(timestampMs: number) {
+  const date = new Date(timestampMs);
+
+  const DD_MMM_YYYY__hh_mm_ap = "d LLL y, hh:mm aaa";
+  return format(date, DD_MMM_YYYY__hh_mm_ap);
+}
+
+function SessionDisplay(props: { session: Session }) {
+  const { session } = props;
+  const sessionInfo = getSessionInfo(session);
+  const { players } = sessionInfo;
+  const { player1Wins, player2Wins, draws } = sessionInfo;
+
+  const timestampStr = formatSessionTimestamp(session.timestampMs);
+
+  return (
+    <article className="bg-stone-400 h-[33vh] p-3">
+      <section className="aspect-square h-full p-3 flex flex-col justify-center items-center gap-3">
+        <p className="text-sm text-black/50">{timestampStr}</p>
+
+        <div className="grid grid-cols-3 items-center gap-3">
+          <div>
+            <div className="font-bold text-xl">{players[0]}</div>
+            <div>{player1Wins}</div>
+          </div>
+          <div className="text-center">
+            <div>vs</div>
+            <div className="text-sm text-black/50">Draws: {draws}</div>
+          </div>
+          <div className="text-right">
+            <div className="font-bold text-xl">{players[1]}</div>
+            <div>{player2Wins}</div>
+          </div>
+        </div>
+      </section>
+    </article>
+  );
+}
+
 export function HomeScreen() {
   const { openModal, changeModalContent } = useModalContext();
+
+  // TODO Fetch from remote database
+  const sessions = getSessionsFromStorage();
 
   function showSessionPrompt() {
     changeModalContent(<SessionPrompt />);
@@ -83,8 +131,8 @@ export function HomeScreen() {
   }
 
   return (
-    <article className="bg-stone-300 h-screen">
-      <header className="grid place-items-center gap-6 p-6">
+    <article className="bg-stone-300 h-screen overflow-y-scroll">
+      <header className="h-[50vh] flex flex-col justify-center items-center gap-6">
         <h1 className="text-3xl">
           Welcome to <span className="font-bold">Tic-Tac-Toe!</span>
         </h1>
@@ -96,6 +144,14 @@ export function HomeScreen() {
           Start New Game
         </button>
       </header>
+
+      <ol className="grid gap-3">
+        {sessions.map((session, idx) => (
+          <li key={idx}>
+            <SessionDisplay session={session} />
+          </li>
+        ))}
+      </ol>
     </article>
   );
 }
