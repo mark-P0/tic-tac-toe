@@ -1,10 +1,10 @@
 import { raise } from "utils/errors";
 import { useSessionContext } from "../../contexts/SessionContext";
 
-export function GameScreen() {
-  const { session, setCurrentRound } = useSessionContext();
-
+function useSessionInfo() {
+  const { session } = useSessionContext();
   const { players, rounds } = session;
+
   if (players === null) {
     raise("Players does not exist...?");
   }
@@ -21,6 +21,18 @@ export function GameScreen() {
 
   const round =
     rounds[rounds.length - 1] ?? raise("Current round does not exist...?");
+
+  return {
+    ...{ players, rounds },
+    ...{ player1Wins, player2Wins, draws },
+    round,
+  };
+}
+
+export function GameScreen() {
+  const { setCurrentRound } = useSessionContext();
+  const { players, rounds, player1Wins, player2Wins, draws, round } =
+    useSessionInfo();
 
   function makeMove(idx: number) {
     round.board[idx] = "x"; // Should use current player
