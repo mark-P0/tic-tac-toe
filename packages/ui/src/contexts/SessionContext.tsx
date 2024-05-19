@@ -75,8 +75,7 @@ export function getRoundInfo(round: Round) {
   };
 }
 
-export function useSessionInfo() {
-  const { session } = useSessionContext();
+export function getSessionInfo(session: Session) {
   const { players, rounds } = session;
 
   if (players === null) {

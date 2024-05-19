@@ -7,8 +7,8 @@ import {
   Cell,
   Player,
   getRoundInfo,
+  getSessionInfo,
   useSessionContext,
-  useSessionInfo,
 } from "../../contexts/SessionContext";
 import { saveSessionToStorage } from "../../utils/storage";
 
@@ -17,7 +17,7 @@ function RoundEndPrompt() {
   const { changeScreen } = useScreenContext();
   const { closeModal } = useModalContext();
 
-  const sessionInfo = useSessionInfo();
+  const sessionInfo = getSessionInfo(session);
   const { players, rounds } = sessionInfo;
   const { player1Wins, player2Wins, draws } = sessionInfo;
 
@@ -151,11 +151,11 @@ function BoardCellButton(props: {
 }
 
 export function GameScreen() {
-  const { setCurrentRound } = useSessionContext();
+  const { session, setCurrentRound } = useSessionContext();
   const { openModal, changeModalContent, makeModalCancellable } =
     useModalContext();
 
-  const sessionInfo = useSessionInfo();
+  const sessionInfo = getSessionInfo(session);
   const { players, rounds } = sessionInfo;
   const { player1Wins, player2Wins, draws } = sessionInfo;
 
