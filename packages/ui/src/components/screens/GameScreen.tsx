@@ -53,6 +53,20 @@ function useSessionInfo() {
   }
   players satisfies NonNullable<typeof players>;
 
+  const round =
+    rounds[rounds.length - 1] ?? raise("Current round does not exist...?");
+  const winningIndices = getWinningIndices(round.board);
+
+  const hasWinner = winningIndices !== null;
+  const hasFreeBoardCells = round.board.some((cell) => cell === null);
+  const isRoundOver = hasWinner || !hasFreeBoardCells;
+
+  if (hasWinner) {
+    const sampleWinningIdx =
+      winningIndices[0] ?? raise("First winning index does not exist...?");
+    round.winner = round.board[sampleWinningIdx];
+  }
+
   let player1Wins = 0;
   let player2Wins = 0;
   let draws = 0;
@@ -62,18 +76,10 @@ function useSessionInfo() {
     if (round.winner === null) draws++;
   }
 
-  const round =
-    rounds[rounds.length - 1] ?? raise("Current round does not exist...?");
-  const winningIndices = getWinningIndices(round.board);
-
-  const hasWinner = winningIndices !== null;
-  const hasFreeBoardCells = round.board.some((cell) => cell === null);
-  const isRoundOver = hasWinner || !hasFreeBoardCells;
-
   return {
     ...{ players, rounds },
-    ...{ player1Wins, player2Wins, draws },
     ...{ round, winningIndices, isRoundOver },
+    ...{ player1Wins, player2Wins, draws },
   };
 }
 
@@ -103,8 +109,8 @@ export function GameScreen() {
 
   const sessionInfo = useSessionInfo();
   const { players, rounds } = sessionInfo;
-  const { player1Wins, player2Wins, draws } = sessionInfo;
   const { round, winningIndices, isRoundOver } = sessionInfo;
+  const { player1Wins, player2Wins, draws } = sessionInfo;
 
   const [currentPlayer, setCurrentPlayer] = useState<Player>("x");
   function changeToNextPlayer() {
