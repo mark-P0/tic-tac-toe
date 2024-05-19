@@ -83,22 +83,19 @@ export function HomeScreen() {
   }
 
   return (
-    <article className="bg-stone-300 h-screen grid grid-rows-[1fr_3fr]">
-      <header className="grid place-items-center">
+    <article className="bg-stone-300 h-screen">
+      <header className="grid place-items-center gap-6 p-6">
         <h1 className="text-3xl">
           Welcome to <span className="font-bold">Tic-Tac-Toe!</span>
         </h1>
-      </header>
 
-      <div className="grid place-items-center">
         <button
           onClick={showSessionPrompt}
-          className="h-1/2 aspect-square p-6 rounded-lg border-dashed border-2 border-black/25 text-black/50"
+          className="bg-white p-3 rounded-lg text-xl font-bold transition disabled:opacity-50"
         >
-          <div className="text-6xl font-bold">+</div>
-          <div className="text-xl">Start New Game</div>
+          Start New Game
         </button>
-      </div>
+      </header>
     </article>
   );
 }
