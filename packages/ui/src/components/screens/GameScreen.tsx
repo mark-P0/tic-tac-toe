@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { ComponentProps, useState } from "react";
 import { raise } from "utils/errors";
 import {
@@ -26,7 +27,7 @@ function getWinningIndices(board: Round["board"]) {
       [0, 4, 8],
       [2, 4, 6],
     ],
-  ] as const;
+  ];
 
   for (const slice of slices) {
     const [a, b, c] = slice;
@@ -78,16 +79,18 @@ function useSessionInfo() {
 
 function BoardCellButton(props: {
   cell: Cell;
+  isWinning?: boolean;
   onClick: ComponentProps<"button">["onClick"];
 }) {
   const { cell, onClick } = props;
+  const { isWinning = false } = props;
 
   return (
     <button
       type="button"
       disabled={cell !== null}
       onClick={onClick}
-      className="bg-white rounded-lg"
+      className={clsx("rounded-lg", isWinning ? "bg-green-400" : "bg-white")}
     >
       {cell === "x" && <span className="text-6xl font-bold">X</span>}
       {cell === "o" && <span className="text-6xl font-bold">O</span>}
@@ -162,6 +165,7 @@ export function GameScreen() {
             <BoardCellButton
               key={idx}
               cell={cell}
+              isWinning={winningIndices?.includes(idx)}
               onClick={() => makeMove(idx)}
             />
           ))}
