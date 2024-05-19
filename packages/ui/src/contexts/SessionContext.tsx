@@ -8,7 +8,7 @@ export type Round = {
   board: Cell[];
 };
 type Session = {
-  timestamp: Date;
+  timestampMs: number;
   players: [string, string] | null;
   rounds: Round[];
 };
@@ -108,7 +108,7 @@ const BASE_ROUND = (): Round => ({
   board: Array<Cell>(3 * 3).fill(null),
 });
 const BASE_SESSION = (): Session => ({
-  timestamp: new Date(),
+  timestampMs: Date.now(),
   players: null,
   rounds: [],
 });
