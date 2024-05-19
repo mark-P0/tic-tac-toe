@@ -44,6 +44,19 @@ function getWinningIndices(board: Round["board"]) {
   return null;
 }
 
+function getRoundInfo(round: Round) {
+  const winningIndices = getWinningIndices(round.board);
+
+  const hasWinner = winningIndices !== null;
+  const hasFreeBoardCells = round.board.some((cell) => cell === null);
+  const isRoundOver = hasWinner || !hasFreeBoardCells;
+
+  return {
+    winningIndices,
+    ...{ hasWinner, hasFreeBoardCells, isRoundOver },
+  };
+}
+
 function useSessionInfo() {
   const { session } = useSessionContext();
   const { players, rounds } = session;
@@ -55,15 +68,11 @@ function useSessionInfo() {
 
   const round =
     rounds[rounds.length - 1] ?? raise("Current round does not exist...?");
-  const winningIndices = getWinningIndices(round.board);
-
-  const hasWinner = winningIndices !== null;
-  const hasFreeBoardCells = round.board.some((cell) => cell === null);
-  const isRoundOver = hasWinner || !hasFreeBoardCells;
+  const { winningIndices, hasWinner, isRoundOver } = getRoundInfo(round);
 
   if (hasWinner) {
     const sampleWinningIdx =
-      winningIndices[0] ?? raise("First winning index does not exist...?");
+      winningIndices?.[0] ?? raise("First winning index does not exist...?");
     round.winner = round.board[sampleWinningIdx];
   }
 
