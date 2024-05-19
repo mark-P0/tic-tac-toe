@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import { createNewContext } from "../utils/react";
 
 export type Player = "x" | "o";
-type Cell = Player | null;
+export type Cell = Player | null;
 export type Round = {
   board: Cell[];
   winner:

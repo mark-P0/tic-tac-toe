@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { ComponentProps, useState } from "react";
 import { raise } from "utils/errors";
 import {
+  Cell,
   Player,
   Round,
   useSessionContext,
@@ -75,6 +76,25 @@ function useSessionInfo() {
   };
 }
 
+function BoardCellButton(props: {
+  cell: Cell;
+  onClick: ComponentProps<"button">["onClick"];
+}) {
+  const { cell, onClick } = props;
+
+  return (
+    <button
+      type="button"
+      disabled={cell !== null}
+      onClick={onClick}
+      className="bg-white rounded-lg"
+    >
+      {cell === "x" && <span className="text-6xl font-bold">X</span>}
+      {cell === "o" && <span className="text-6xl font-bold">O</span>}
+    </button>
+  );
+}
+
 export function GameScreen() {
   const { setCurrentRound } = useSessionContext();
 
@@ -139,16 +159,11 @@ export function GameScreen() {
           className="grid grid-cols-3 grid-rows-3 gap-6 p-6 rounded-lg aspect-square h-2/3 bg-stone-400 disabled:opacity-50"
         >
           {round.board.map((cell, idx) => (
-            <button
-              type="button"
+            <BoardCellButton
               key={idx}
-              disabled={cell !== null}
+              cell={cell}
               onClick={() => makeMove(idx)}
-              className="bg-white rounded-lg"
-            >
-              {cell === "x" && <span className="text-6xl font-bold">X</span>}
-              {cell === "o" && <span className="text-6xl font-bold">O</span>}
-            </button>
+            />
           ))}
         </fieldset>
       </form>
