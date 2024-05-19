@@ -124,6 +124,14 @@ export const [useSessionContext, SessionProvider] = createNewContext(() => {
     },
     []
   );
+  const saveSessionToLocalStorage = useCallback(() => {
+    // TODO Parse with Zod?
+    const sessionsFromStorage = localStorage.getItem("sessions") ?? "[]";
+    const sessions: Session[] = JSON.parse(sessionsFromStorage);
+
+    localStorage.setItem("sessions", JSON.stringify([...sessions, session]));
+  }, [session]);
+
   const addNewRound = useCallback(() => {
     setSession((session) => ({
       ...session,
@@ -138,7 +146,7 @@ export const [useSessionContext, SessionProvider] = createNewContext(() => {
   }, []);
 
   return {
-    ...{ session, resetSession, setSessionPlayers },
+    ...{ session, resetSession, setSessionPlayers, saveSessionToLocalStorage },
     ...{ addNewRound, setCurrentRound },
   };
 });

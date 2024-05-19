@@ -12,7 +12,8 @@ import {
 } from "../../contexts/SessionContext";
 
 function RoundEndPrompt() {
-  const { addNewRound, resetSession } = useSessionContext();
+  const { addNewRound, resetSession, saveSessionToLocalStorage } =
+    useSessionContext();
   const { changeScreen } = useScreenContext();
   const { closeModal } = useModalContext();
 
@@ -28,7 +29,7 @@ function RoundEndPrompt() {
   }
 
   function stop() {
-    // TODO Save session to database
+    saveSessionToLocalStorage();
 
     closeModal();
     changeScreen("home");

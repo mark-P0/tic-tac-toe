@@ -30,6 +30,8 @@ function _App() {
   );
 }
 export function App() {
+  // TODO Sync local storage with remote database
+
   return (
     <SessionProvider>
       <ScreenProvider>
