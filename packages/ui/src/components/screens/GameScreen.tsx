@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import { ComponentProps, useEffect, useState } from "react";
+import { raise } from "utils/errors";
 import { useModalContext } from "../../contexts/ModalContext";
 import {
   Cell,
@@ -10,7 +11,88 @@ import {
 } from "../../contexts/SessionContext";
 
 function RoundEndPrompt() {
-  return <form>round end prompt</form>;
+  const sessionInfo = useSessionInfo();
+  const { players } = sessionInfo;
+  const { player1Wins, player2Wins, draws } = sessionInfo;
+
+  const { round } = sessionInfo;
+  const { winner } = getRoundInfo(round);
+
+  const winnerName =
+    winner === "x"
+      ? players[0]
+      : winner === "o"
+      ? players[1]
+      : raise("Unknown winner name...?");
+
+  return (
+    <form className="h-screen w-screen bg-stone-400 flex flex-col justify-center items-center gap-12">
+      <h2 className="text-3xl">
+        <span className="font-bold">{winnerName}</span> won!
+      </h2>
+
+      <header className="flex gap-24">
+        <div>
+          <h3
+            className={clsx(
+              "text-xl font-bold",
+              winner === "x" && "text-green-700"
+            )}
+          >
+            {players[0]}
+          </h3>
+          <ol className="flex gap-3">
+            <li
+              className={clsx("font-bold", winner === "x" && "text-green-700")}
+            >
+              W {player1Wins}
+            </li>
+            <li className={clsx(winner === "o" && "text-red-700")}>
+              L {player2Wins}
+            </li>
+            <li className="text-black/50">D {draws}</li>
+          </ol>
+        </div>
+
+        <div className="text-right">
+          <h3
+            className={clsx(
+              "text-xl font-bold",
+              winner === "o" && "text-green-700"
+            )}
+          >
+            {players[1]}
+          </h3>
+          <ol className="flex flex-row-reverse gap-3">
+            <li
+              className={clsx("font-bold", winner === "o" && "text-green-700")}
+            >
+              W {player2Wins}
+            </li>
+            <li className={clsx(winner === "x" && "text-red-700")}>
+              L {player1Wins}
+            </li>
+            <li className="text-black/50">D {draws}</li>
+          </ol>
+        </div>
+      </header>
+
+      <footer className="flex flex-col justify-center items-center gap-3">
+        <button
+          type="button"
+          className="bg-white p-3 rounded-lg text-xl font-bold transition disabled:opacity-50"
+        >
+          Continue
+        </button>
+        <button
+          type="button"
+          className="p-3 rounded-lg hover:underline underline-offset-2"
+        >
+          Stop
+        </button>
+      </footer>
+    </form>
+  );
 }
 
 function BoardCellButton(props: {
@@ -26,7 +108,7 @@ function BoardCellButton(props: {
       type="button"
       disabled={cell !== null}
       onClick={onClick}
-      className={clsx("rounded-lg", isWinning ? "bg-green-400" : "bg-white")}
+      className={clsx("rounded-lg", isWinning ? "bg-green-700" : "bg-white")}
     >
       {cell === "x" && <span className="text-6xl font-bold">X</span>}
       {cell === "o" && <span className="text-6xl font-bold">O</span>}
