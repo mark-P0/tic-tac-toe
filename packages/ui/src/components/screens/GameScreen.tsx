@@ -64,10 +64,14 @@ function useSessionInfo() {
     rounds[rounds.length - 1] ?? raise("Current round does not exist...?");
   const winningIndices = getWinningIndices(round.board);
 
+  const hasWinner = winningIndices !== null;
+  const hasFreeBoardCells = round.board.some((cell) => cell === null);
+  const isRoundOver = hasWinner || !hasFreeBoardCells;
+
   return {
     ...{ players, rounds },
     ...{ player1Wins, player2Wins, draws },
-    ...{ round, winningIndices },
+    ...{ round, winningIndices, isRoundOver },
   };
 }
 
@@ -77,7 +81,7 @@ export function GameScreen() {
   const sessionInfo = useSessionInfo();
   const { players, rounds } = sessionInfo;
   const { player1Wins, player2Wins, draws } = sessionInfo;
-  const { round, winningIndices } = sessionInfo;
+  const { round, winningIndices, isRoundOver } = sessionInfo;
 
   const [currentPlayer, setCurrentPlayer] = useState<Player>("x");
   function changeToNextPlayer() {
@@ -131,7 +135,7 @@ export function GameScreen() {
 
       <form className="grid place-items-center">
         <fieldset
-          disabled={winningIndices !== null}
+          disabled={isRoundOver}
           className="grid grid-cols-3 grid-rows-3 gap-6 p-6 rounded-lg aspect-square h-2/3 bg-stone-400 disabled:opacity-50"
         >
           {round.board.map((cell, idx) => (
