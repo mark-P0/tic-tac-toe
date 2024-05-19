@@ -48,7 +48,7 @@ function getRoundInfo(round: Round) {
   const winningIndices = getWinningIndices(round.board);
 
   const hasWinner = winningIndices !== null;
-  const hasFreeBoardCells = round.board.some((cell) => cell === null);
+  const hasFreeBoardCells = round.board.includes(null);
   const isRoundOver = hasWinner || !hasFreeBoardCells;
 
   return {
