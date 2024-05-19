@@ -47,17 +47,20 @@ function RoundEndPrompt() {
     raise("Round results does not exist...?");
   const { winner } = getRoundInfo(round);
 
-  const winnerName =
-    winner === "x"
-      ? players[0]
-      : winner === "o"
-      ? players[1]
-      : raise("Unknown winner name...?");
-
   return (
     <form className="h-screen w-screen bg-stone-400 flex flex-col justify-center items-center gap-12">
       <h2 className="text-3xl">
-        <span className="font-bold">{winnerName}</span> won!
+        {winner === "x" && (
+          <>
+            <span className="font-bold">{players[0]}</span> won!
+          </>
+        )}
+        {winner === "o" && (
+          <>
+            <span className="font-bold">{players[1]}</span> won!
+          </>
+        )}
+        {winner === null && <>It's a tie!</>}
       </h2>
 
       <header className="flex gap-24">
