@@ -10,10 +10,10 @@ import {
   useSessionContext,
   useSessionInfo,
 } from "../../contexts/SessionContext";
+import { saveSessionToStorage } from "../../utils/storage";
 
 function RoundEndPrompt() {
-  const { addNewRound, resetSession, saveSessionToLocalStorage } =
-    useSessionContext();
+  const { session, addNewRound, resetSession } = useSessionContext();
   const { changeScreen } = useScreenContext();
   const { closeModal } = useModalContext();
 
@@ -29,7 +29,7 @@ function RoundEndPrompt() {
   }
 
   function stop() {
-    saveSessionToLocalStorage();
+    saveSessionToStorage(session);
 
     closeModal();
     changeScreen("home");
