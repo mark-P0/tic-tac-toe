@@ -2,7 +2,7 @@ import { raise } from "utils/errors";
 import { useSessionContext } from "../../contexts/SessionContext";
 
 export function GameScreen() {
-  const { session } = useSessionContext();
+  const { session, setCurrentRound } = useSessionContext();
 
   const { players, rounds } = session;
   if (players === null) {
@@ -22,9 +22,14 @@ export function GameScreen() {
   const round =
     rounds[rounds.length - 1] ?? raise("Current round does not exist...?");
 
-  // TODO Add state for current player turn
+  function makeMove(idx: number) {
+    round.board[idx] = "x"; // Should use current player
+    setCurrentRound({ ...round });
 
-  // TODO Add logic for button click; should update round board, cycle to next player
+    // TODO Should cycle to next player
+  }
+
+  // TODO Add state for current player turn
 
   // TODO Check if round board already has a winner
   // TODO if with winner, disable form fieldset below
@@ -60,8 +65,10 @@ export function GameScreen() {
         <fieldset className="grid grid-cols-3 grid-rows-3 gap-6 p-6 rounded-lg aspect-square h-2/3 bg-stone-400">
           {round.board.map((cell, idx) => (
             <button
+              type="button"
               key={idx}
               disabled={cell !== null}
+              onClick={() => makeMove(idx)}
               className="bg-white rounded-lg"
             >
               {cell === "x" && <span className="text-6xl font-bold">X</span>}

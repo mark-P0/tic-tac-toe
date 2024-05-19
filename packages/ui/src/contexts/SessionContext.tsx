@@ -44,9 +44,15 @@ export const [useSessionContext, SessionProvider] = createNewContext(() => {
       rounds: [...session.rounds, BASE_ROUND()],
     }));
   }, []);
+  const setCurrentRound = useCallback((round: Round) => {
+    setSession((session) => ({
+      ...session,
+      rounds: [...session.rounds.slice(0, -1), round],
+    }));
+  }, []);
 
   return {
     ...{ session, resetSession, setSessionPlayers },
-    addNewRound,
+    ...{ addNewRound, setCurrentRound },
   };
 });
