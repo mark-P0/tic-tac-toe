@@ -5,10 +5,6 @@ export type Player = "x" | "o";
 export type Cell = Player | null;
 export type Round = {
   board: Cell[];
-  winner:
-    | Player // "Symbol" of a player
-    | null // Draw (no one won)
-    | undefined; // No winner yet; round is possibly on-going or left unfinished
 };
 type Session = {
   players: [string, string] | null;
@@ -17,7 +13,6 @@ type Session = {
 
 const BASE_ROUND = (): Round => ({
   board: Array<Cell>(3 * 3).fill(null),
-  winner: undefined,
 });
 const BASE_SESSION = (): Session => ({
   players: null,

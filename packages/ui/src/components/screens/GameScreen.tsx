@@ -44,6 +44,32 @@ function getWinningIndices(board: Round["board"]) {
   return null;
 }
 
+function getRoundInfo(round: Round) {
+  const winningIndices = getWinningIndices(round.board);
+
+  const hasWinner = winningIndices !== null;
+  const hasFreeBoardCells = round.board.includes(null);
+  const isRoundOver = hasWinner || !hasFreeBoardCells;
+
+  type Winner =
+    | Player // "Symbol" of a player
+    | null // Draw (no one won)
+    | undefined; // No winner yet; round is possibly on-going or left unfinished
+  let winner: Winner = null;
+  if (!isRoundOver) {
+    winner = undefined;
+  }
+  if (hasWinner) {
+    const idx = winningIndices[0];
+    winner = round.board[idx];
+  }
+
+  return {
+    ...{ winningIndices, winner },
+    ...{ hasWinner, hasFreeBoardCells, isRoundOver },
+  };
+}
+
 function useSessionInfo() {
   const { session } = useSessionContext();
   const { players, rounds } = session;
@@ -53,33 +79,23 @@ function useSessionInfo() {
   }
   players satisfies NonNullable<typeof players>;
 
-  const round =
-    rounds[rounds.length - 1] ?? raise("Current round does not exist...?");
-  const winningIndices = getWinningIndices(round.board);
-
-  const hasWinner = winningIndices !== null;
-  const hasFreeBoardCells = round.board.some((cell) => cell === null);
-  const isRoundOver = hasWinner || !hasFreeBoardCells;
-
-  if (hasWinner) {
-    const sampleWinningIdx =
-      winningIndices[0] ?? raise("First winning index does not exist...?");
-    round.winner = round.board[sampleWinningIdx];
-  }
-
   let player1Wins = 0;
   let player2Wins = 0;
   let draws = 0;
   for (const round of rounds) {
-    if (round.winner === "x") player1Wins++;
-    if (round.winner === "o") player2Wins++;
-    if (round.winner === null) draws++;
+    const { winner } = getRoundInfo(round);
+    if (winner === "x") player1Wins++;
+    if (winner === "o") player2Wins++;
+    if (winner === null) draws++;
   }
+
+  const round =
+    rounds[rounds.length - 1] ?? raise("Current round does not exist...?");
 
   return {
     ...{ players, rounds },
-    ...{ round, winningIndices, isRoundOver },
     ...{ player1Wins, player2Wins, draws },
+    ...{ round },
   };
 }
 
@@ -109,8 +125,10 @@ export function GameScreen() {
 
   const sessionInfo = useSessionInfo();
   const { players, rounds } = sessionInfo;
-  const { round, winningIndices, isRoundOver } = sessionInfo;
   const { player1Wins, player2Wins, draws } = sessionInfo;
+
+  const { round } = sessionInfo;
+  const { winningIndices, isRoundOver } = getRoundInfo(round);
 
   const [currentPlayer, setCurrentPlayer] = useState<Player>("x");
   function changeToNextPlayer() {
