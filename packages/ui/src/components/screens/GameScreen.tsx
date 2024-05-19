@@ -191,8 +191,6 @@ export function GameScreen() {
     changeToNextPlayer();
   }
 
-  // TODO if with winner, useEffect update round, show game end modal
-
   return (
     <article className="bg-stone-300 h-screen w-screen grid grid-rows-[auto_1fr]">
       <header className="grid grid-cols-3 p-6">
