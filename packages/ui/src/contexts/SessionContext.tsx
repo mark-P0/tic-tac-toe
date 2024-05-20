@@ -1,17 +1,7 @@
 import { useCallback, useState } from "react";
+import { Cell, Player, Round, Session } from "schemas";
 import { raise } from "utils/errors";
 import { createNewContext } from "../utils/react";
-
-export type Player = "x" | "o";
-export type Cell = Player | null;
-export type Round = {
-  board: Cell[];
-};
-export type Session = {
-  timestampMs: number;
-  players: [string, string] | null;
-  rounds: Round[];
-};
 
 function getWinningIndices(board: Round["board"]) {
   const slices = [

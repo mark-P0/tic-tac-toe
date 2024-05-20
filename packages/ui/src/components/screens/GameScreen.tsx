@@ -1,9 +1,8 @@
 import clsx from "clsx";
 import { ComponentProps, useEffect, useState } from "react";
+import { Cell, Player } from "schemas";
 import { useModalContext } from "../../contexts/ModalContext";
 import {
-  Cell,
-  Player,
   getRoundInfo,
   getSessionInfo,
   useSessionContext,

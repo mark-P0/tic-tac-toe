@@ -1,4 +1,4 @@
-import { Session } from "../contexts/SessionContext";
+import { Session } from "schemas";
 
 export function getSessionsFromStorage() {
   // TODO Parse with Zod?
