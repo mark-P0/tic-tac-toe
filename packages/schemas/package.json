@@ -1,3 +1,6 @@
 {
-  "name": "schemas"
+  "name": "schemas",
+  "dependencies": {
+    "zod": "^3.23.8"
+  }
 }
