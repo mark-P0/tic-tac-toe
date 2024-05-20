@@ -162,6 +162,12 @@ function SessionsList() {
   query.status satisfies "completed";
   const sessions = query.value;
 
+  if (sessions.length === 0) {
+    return (
+      <p className="text-center text-black/50">Be the first ones to play!</p>
+    );
+  }
+
   return (
     <ol className="grid gap-3">
       {sessions.map((session, idx) => (
