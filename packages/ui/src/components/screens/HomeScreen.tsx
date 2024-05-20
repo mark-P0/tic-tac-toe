@@ -189,6 +189,8 @@ export function HomeScreen() {
     openModal();
   }
 
+  document.title = "Home | Tic-Tac-Toe";
+
   return (
     <article className="bg-stone-300 h-screen w-screen overflow-clip overflow-y-auto">
       <header className="h-[50vh] flex flex-col justify-center items-center gap-6">
