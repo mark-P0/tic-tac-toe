@@ -6,6 +6,8 @@ settings:
 
 importers:
 
+  packages/schemas: {}
+
   packages/ui:
     dependencies:
       react:
