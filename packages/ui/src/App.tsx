@@ -1,6 +1,7 @@
 import { Modal } from "./components/Modal";
 import { GameScreen } from "./components/screens/GameScreen";
 import { HomeScreen } from "./components/screens/HomeScreen";
+import { BackgroundSyncProvider } from "./contexts/BackgroundSyncContext";
 import { ModalProvider } from "./contexts/ModalContext";
 import { ScreenProvider, useScreenContext } from "./contexts/ScreenContext";
 import { SessionProvider, useSessionContext } from "./contexts/SessionContext";
@@ -30,13 +31,13 @@ function _App() {
   );
 }
 export function App() {
-  // TODO Sync local storage with remote database
-
   return (
     <SessionProvider>
       <ScreenProvider>
         <ModalProvider>
-          <_App />
+          <BackgroundSyncProvider>
+            <_App />
+          </BackgroundSyncProvider>
         </ModalProvider>
       </ScreenProvider>
     </SessionProvider>

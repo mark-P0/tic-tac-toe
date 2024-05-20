@@ -19,6 +19,17 @@ export function getSessionsFromStorage(): Session[] {
   return sessions;
 }
 
+export function getOldestSessionFromStorage(): Session | null {
+  const sessions = getSessionsFromStorage();
+  const session = sessions[0] ?? null;
+  return session;
+}
+
+export function removeOldestSessionFromStorage() {
+  const [, ...others] = getSessionsFromStorage();
+  localStorage.setItem("sessions", JSON.stringify(others));
+}
+
 export function saveSessionToStorage(session: Session) {
   const sessions = getSessionsFromStorage();
   localStorage.setItem("sessions", JSON.stringify([...sessions, session]));

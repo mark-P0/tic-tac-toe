@@ -2,6 +2,7 @@ import { Round, Session, zSession } from "@tic-tac-toe/schemas";
 import clsx from "clsx";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
+import { useBackgroundSyncContext } from "../../contexts/BackgroundSyncContext";
 import { useModalContext } from "../../contexts/ModalContext";
 import { getRoundInfo, getSessionInfo } from "../../contexts/SessionContext";
 import { env } from "../../utils/env";
@@ -181,6 +182,7 @@ function SessionsList() {
 
 export function HomeScreen() {
   const { openModal, changeModalContent } = useModalContext();
+  const { syncCt } = useBackgroundSyncContext();
 
   function showSessionPrompt() {
     changeModalContent(<SessionPrompt />);
@@ -202,7 +204,7 @@ export function HomeScreen() {
         </button>
       </header>
 
-      <SessionsList />
+      <SessionsList key={syncCt} />
     </article>
   );
 }
