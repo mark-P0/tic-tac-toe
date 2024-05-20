@@ -12,6 +12,7 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
+    "@tic-tac-toe/schemas": "workspace:^",
     "express": "^4.19.2",
     "zod": "^3.23.8"
   }

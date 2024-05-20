@@ -8,6 +8,9 @@ importers:
 
   packages/api:
     dependencies:
+      '@tic-tac-toe/schemas':
+        specifier: workspace:^
+        version: link:../schemas
       express:
         specifier: ^4.19.2
         version: 4.19.2
