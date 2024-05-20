@@ -148,7 +148,15 @@ function SessionsList() {
 
   if (query.status === "error") {
     console.error(query.error);
-    return <div>An error has ocurred.</div>;
+    return (
+      <p className="text-center">
+        <span className="text-sm text-black/50 italic">
+          Oops! I had some problems remembering the previous games...
+        </span>
+        <br />
+        <span className="font-bold">But you can still play!</span>
+      </p>
+    );
   }
 
   query.status satisfies "completed";
