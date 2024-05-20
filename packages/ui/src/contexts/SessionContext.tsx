@@ -1,6 +1,6 @@
+import { Cell, Player, Round, Session } from "@tic-tac-toe/schemas";
+import { raise } from "@tic-tac-toe/utils/errors";
 import { useCallback, useState } from "react";
-import { Cell, Player, Round, Session } from "schemas";
-import { raise } from "utils/errors";
 import { createNewContext } from "../utils/react";
 
 function getWinningIndices(board: Round["board"]) {

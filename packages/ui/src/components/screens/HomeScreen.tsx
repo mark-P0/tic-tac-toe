@@ -1,6 +1,6 @@
+import { Round, Session } from "@tic-tac-toe/schemas";
 import clsx from "clsx";
 import { format } from "date-fns";
-import { Round, Session } from "schemas";
 import { useModalContext } from "../../contexts/ModalContext";
 import { getRoundInfo, getSessionInfo } from "../../contexts/SessionContext";
 import { getSessionsFromStorage } from "../../utils/storage";

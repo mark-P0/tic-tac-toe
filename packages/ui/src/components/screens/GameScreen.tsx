@@ -1,6 +1,6 @@
+import { Cell, Player } from "@tic-tac-toe/schemas";
 import clsx from "clsx";
 import { ComponentProps, useEffect, useState } from "react";
-import { Cell, Player } from "schemas";
 import { useModalContext } from "../../contexts/ModalContext";
 import {
   getRoundInfo,

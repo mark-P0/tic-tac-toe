@@ -1,6 +1,6 @@
+import { raise } from "@tic-tac-toe/utils/errors";
 import clsx from "clsx";
 import { SyntheticEvent, useEffect, useRef } from "react";
-import { raise } from "utils/errors";
 import { useModalContext } from "../contexts/ModalContext";
 
 export function Modal() {
