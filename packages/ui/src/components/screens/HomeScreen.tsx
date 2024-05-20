@@ -1,12 +1,8 @@
 import clsx from "clsx";
 import { format } from "date-fns";
+import { Round, Session } from "schemas";
 import { useModalContext } from "../../contexts/ModalContext";
-import {
-  Round,
-  Session,
-  getRoundInfo,
-  getSessionInfo,
-} from "../../contexts/SessionContext";
+import { getRoundInfo, getSessionInfo } from "../../contexts/SessionContext";
 import { getSessionsFromStorage } from "../../utils/storage";
 import { SessionPrompt } from "../prompts/SessionPrompt";
 
