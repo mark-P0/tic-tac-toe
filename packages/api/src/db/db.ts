@@ -1,4 +1,5 @@
-import mongoose from "mongoose";
+import { type Round, type Session } from "@tic-tac-toe/schemas";
+import mongoose, { Schema } from "mongoose";
 import { env } from "../utils/env";
 
 export async function connectToDb() {
@@ -11,3 +12,14 @@ export async function connectToDb() {
     throw new Error("Failed connecting to database");
   }
 }
+
+const RoundSchema = new Schema<Round>({
+  board: [{ type: String, enum: ["x", "o", null] }],
+});
+const SessionSchema = new Schema<Session>({
+  timestampMs: { type: Number, required: true },
+  players: [String, String],
+  rounds: { type: [RoundSchema], required: true },
+});
+
+export const SessionModel = mongoose.model<Session>("Session", SessionSchema);
