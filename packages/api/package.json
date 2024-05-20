@@ -1,8 +1,8 @@
 {
   "name": "@tic-tac-toe/api",
   "scripts": {
-    "start": "tsx ./src/app.ts",
-    "dev": "tsx --watch ./src/app.ts"
+    "start": "tsx --env-file=.env ./src/app.ts",
+    "dev": "tsx --env-file=.env --watch ./src/app.ts"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
@@ -11,6 +11,7 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "zod": "^3.23.8"
   }
 }
