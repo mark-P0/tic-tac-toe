@@ -1,15 +1,11 @@
-import { Round, Session } from "@tic-tac-toe/schemas";
+import { Round, Session, zSession } from "@tic-tac-toe/schemas";
 import clsx from "clsx";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { useModalContext } from "../../contexts/ModalContext";
 import { getRoundInfo, getSessionInfo } from "../../contexts/SessionContext";
-import { getSessionsFromStorage } from "../../utils/storage";
+import { env } from "../../utils/env";
 import { SessionPrompt } from "../prompts/SessionPrompt";
-
-async function sleep(secs: number) {
-  return new Promise((resolve) => setTimeout(resolve, secs * 1000));
-}
 
 function ensureError(value: unknown): Error {
   if (value instanceof Error) return value;
@@ -130,10 +126,11 @@ function SessionDisplay(props: { session: Session }) {
 }
 
 async function fetchSessions() {
-  await sleep(1);
+  const url = new URL("/api/v0/sessions", env.VITE_API_BASE_URL);
+  const res = await fetch(url);
+  const json = await res.json();
 
-  // TODO Fetch from remote database
-  const sessions = getSessionsFromStorage();
+  const sessions = zSession.array().parse(json);
 
   return sessions;
 }
@@ -145,6 +142,7 @@ function SessionsList() {
   }
 
   if (query.status === "error") {
+    console.error(query.error);
     return <div>An error has ocurred.</div>;
   }
 
