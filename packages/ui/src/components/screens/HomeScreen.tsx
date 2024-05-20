@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useModalContext } from "../../contexts/ModalContext";
 import { getRoundInfo, getSessionInfo } from "../../contexts/SessionContext";
 import { env } from "../../utils/env";
+import { LoadingPing } from "../Loading";
 import { SessionPrompt } from "../prompts/SessionPrompt";
 
 function ensureError(value: unknown): Error {
@@ -138,7 +139,11 @@ function SessionsList() {
   const [query] = useQuery(fetchSessions);
 
   if (query.status === "pending") {
-    return <div>Loading...</div>;
+    return (
+      <div className="grid place-items-center">
+        <LoadingPing />
+      </div>
+    );
   }
 
   if (query.status === "error") {
