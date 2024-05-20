@@ -1,4 +1,4 @@
-import { Session } from "schemas";
+import { Session } from "@tic-tac-toe/schemas";
 
 export function getSessionsFromStorage() {
   // TODO Parse with Zod?

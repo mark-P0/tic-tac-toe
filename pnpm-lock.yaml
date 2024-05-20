@@ -14,18 +14,18 @@ importers:
 
   packages/ui:
     dependencies:
+      '@tic-tac-toe/schemas':
+        specifier: workspace:^
+        version: link:../schemas
+      '@tic-tac-toe/utils':
+        specifier: workspace:^
+        version: link:../utils
       react:
         specifier: ^18.2.0
         version: 18.3.1
       react-dom:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
-      schemas:
-        specifier: workspace:^
-        version: link:../schemas
-      utils:
-        specifier: workspace:^
-        version: link:../utils
     devDependencies:
       '@types/react':
         specifier: ^18.2.66

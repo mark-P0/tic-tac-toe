@@ -1,6 +1,6 @@
+import { raise } from "@tic-tac-toe/utils/errors";
 import clsx from "clsx";
 import { useState } from "react";
-import { raise } from "utils/errors";
 import { useModalContext } from "../../contexts/ModalContext";
 import { useScreenContext } from "../../contexts/ScreenContext";
 import {

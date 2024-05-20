@@ -1,5 +1,5 @@
+import { raise } from "@tic-tac-toe/utils/errors";
 import { PropsWithChildren, createContext, useContext } from "react";
-import { raise } from "utils/errors";
 
 export function createNewContext<T>(useContextValue: () => T) {
   const NewContext = createContext<T | null>(null);
