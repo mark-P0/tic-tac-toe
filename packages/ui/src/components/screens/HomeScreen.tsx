@@ -81,11 +81,23 @@ function SessionDisplay(props: { session: Session }) {
   );
 }
 
-export function HomeScreen() {
-  const { openModal, changeModalContent } = useModalContext();
-
+function SessionsList() {
   // TODO Fetch from remote database
   const sessions = getSessionsFromStorage();
+
+  return (
+    <ol className="grid gap-3">
+      {sessions.map((session, idx) => (
+        <li key={idx} className="grid">
+          <SessionDisplay session={session} />
+        </li>
+      ))}
+    </ol>
+  );
+}
+
+export function HomeScreen() {
+  const { openModal, changeModalContent } = useModalContext();
 
   function showSessionPrompt() {
     changeModalContent(<SessionPrompt />);
@@ -107,13 +119,7 @@ export function HomeScreen() {
         </button>
       </header>
 
-      <ol className="grid gap-3">
-        {sessions.map((session, idx) => (
-          <li key={idx} className="grid">
-            <SessionDisplay session={session} />
-          </li>
-        ))}
-      </ol>
+      <SessionsList />
     </article>
   );
 }
