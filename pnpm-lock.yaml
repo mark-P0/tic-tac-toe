@@ -6,6 +6,8 @@ settings:
 
 importers:
 
+  packages/api: {}
+
   packages/schemas:
     dependencies:
       zod:
