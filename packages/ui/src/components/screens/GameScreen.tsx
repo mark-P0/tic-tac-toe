@@ -71,6 +71,8 @@ export function GameScreen() {
     changeToNextPlayer();
   }
 
+  document.title = `Round ${rounds.length} | Tic-Tac-Toe`;
+
   return (
     <article className="bg-stone-300 h-screen w-screen grid grid-rows-[auto_1fr]">
       <header className="grid grid-cols-3 p-6">
