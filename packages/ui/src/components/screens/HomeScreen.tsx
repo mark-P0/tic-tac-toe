@@ -1,10 +1,54 @@
 import { Round, Session } from "@tic-tac-toe/schemas";
 import clsx from "clsx";
 import { format } from "date-fns";
+import { useEffect, useState } from "react";
 import { useModalContext } from "../../contexts/ModalContext";
 import { getRoundInfo, getSessionInfo } from "../../contexts/SessionContext";
 import { getSessionsFromStorage } from "../../utils/storage";
 import { SessionPrompt } from "../prompts/SessionPrompt";
+
+function ensureError(value: unknown): Error {
+  if (value instanceof Error) return value;
+
+  let valueAsStr = "[Value cannot be stringified]";
+  try {
+    valueAsStr = JSON.stringify(value);
+  } catch {
+    null;
+  }
+
+  return new Error(`Error of value: ${valueAsStr}`);
+}
+
+type Query<T> =
+  | {
+      status: "pending";
+    }
+  | {
+      status: "error";
+      error: Error;
+    }
+  | {
+      status: "completed";
+      value: T;
+    };
+function useQuery<T>(producer: () => Promise<T>) {
+  const [query, setQuery] = useState<Query<T>>({ status: "pending" });
+  useEffect(() => {
+    (async () => {
+      setQuery({ status: "pending" });
+      try {
+        const value = await producer();
+        setQuery({ status: "completed", value });
+      } catch (caughtError) {
+        const error = ensureError(caughtError);
+        setQuery({ status: "error", error });
+      }
+    })();
+  }, [producer]);
+
+  return [query];
+}
 
 function formatSessionTimestamp(timestampMs: number) {
   const date = new Date(timestampMs);
