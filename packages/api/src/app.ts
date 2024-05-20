@@ -15,8 +15,8 @@ app.use("/api/v0", SessionsRouter);
 async function run() {
   await connectToDb();
 
-  app.listen(env.API_PORT, () => {
-    console.log(`Listening on port: ${env.API_PORT}`);
+  app.listen(env.PORT, () => {
+    console.log(`Listening on port: ${env.PORT}`);
   });
 }
 run();
