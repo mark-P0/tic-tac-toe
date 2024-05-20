@@ -7,6 +7,10 @@ import { getRoundInfo, getSessionInfo } from "../../contexts/SessionContext";
 import { getSessionsFromStorage } from "../../utils/storage";
 import { SessionPrompt } from "../prompts/SessionPrompt";
 
+async function sleep(secs: number) {
+  return new Promise((resolve) => setTimeout(resolve, secs * 1000));
+}
+
 function ensureError(value: unknown): Error {
   if (value instanceof Error) return value;
 
@@ -125,9 +129,27 @@ function SessionDisplay(props: { session: Session }) {
   );
 }
 
-function SessionsList() {
+async function fetchSessions() {
+  await sleep(1);
+
   // TODO Fetch from remote database
   const sessions = getSessionsFromStorage();
+
+  return sessions;
+}
+function SessionsList() {
+  const [query] = useQuery(fetchSessions);
+
+  if (query.status === "pending") {
+    return <div>Loading...</div>;
+  }
+
+  if (query.status === "error") {
+    return <div>An error has ocurred.</div>;
+  }
+
+  query.status satisfies "completed";
+  const sessions = query.value;
 
   return (
     <ol className="grid gap-3">
