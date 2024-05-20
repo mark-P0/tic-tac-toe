@@ -1,3 +1,12 @@
 {
-  "name": "@tic-tac-toe/api"
+  "name": "@tic-tac-toe/api",
+  "scripts": {
+    "start": "tsx ./src/app.ts",
+    "dev": "tsx --watch ./src/app.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.12",
+    "tsx": "^4.10.5",
+    "typescript": "^5.2.2"
+  }
 }
