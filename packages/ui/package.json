@@ -10,10 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tic-tac-toe/schemas": "workspace:^",
+    "@tic-tac-toe/utils": "workspace:^",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "@tic-tac-toe/schemas": "workspace:^",
-    "@tic-tac-toe/utils": "workspace:^"
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",
