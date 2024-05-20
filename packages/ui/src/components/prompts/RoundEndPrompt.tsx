@@ -13,7 +13,7 @@ import { saveSessionToStorage } from "../../utils/storage";
 export function RoundEndPrompt() {
   const { session, addNewRound, resetSession } = useSessionContext();
   const { changeScreen } = useScreenContext();
-  const { closeModal } = useModalContext();
+  const { closeModal, makeModalCancellable } = useModalContext();
 
   const sessionInfo = getSessionInfo(session);
   const { players, rounds } = sessionInfo;
@@ -24,12 +24,14 @@ export function RoundEndPrompt() {
     setHasContinued(true);
     addNewRound();
     closeModal();
+    makeModalCancellable(true);
   }
 
   function stop() {
     saveSessionToStorage(session);
 
     closeModal();
+    makeModalCancellable(true);
     changeScreen("home");
 
     // TODO Better way to do this...?
