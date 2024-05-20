@@ -4,6 +4,7 @@ import { SessionsRouter } from "./routes/sessions";
 import { env } from "./utils/env";
 
 const app = express();
+app.use(express.json());
 
 app.use("/api/v0", SessionsRouter);
 
